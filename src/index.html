@@ -1,0 +1,70 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>IvyPinch</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+
+    <style type="text/css">
+        body {
+          margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="pinch-zoom">
+        <img src="img/demo-image.jpg" />
+    </div>
+
+    <script type="text/javascript" src="ivypinch.js"></script>
+    <script type="text/javascript">
+
+        /* Initialization */
+
+        var ivyPinch = new IvyPinch({
+            element: '.pinch-zoom'
+        });
+
+
+        /* Public methods */
+
+        function setMoveY(value){
+            ivyPinch.setMoveY(value);
+        }
+
+        function setMoveX(value){
+            ivyPinch.setMoveX(value);
+        }
+
+        function toggleZoom(){
+            ivyPinch.toggleZoom();
+        }
+
+        function alignImage(){
+            ivyPinch.alignImage();
+        }
+
+
+        /* Events */
+
+        ivyPinch.element.addEventListener('touchstart', function (e) { 
+            console.log(e);
+        }, false);
+
+        ivyPinch.element.addEventListener('touchend', function (e) { 
+            console.log(e);
+        }, false);
+
+        ivyPinch.element.addEventListener('swipe', function (e) { 
+            console.log(e);
+        }, false);
+
+        ivyPinch.element.addEventListener('pinch', function (e) { 
+            console.log(e);
+        }, false);
+
+        ivyPinch.element.addEventListener('double-tap', function (e) { 
+            console.log(e);
+        }, false);
+    </script>
+</body>
+</html>
