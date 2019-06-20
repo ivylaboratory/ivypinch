@@ -58,11 +58,11 @@ export class IvyPinch {
 
 
         /* Init */
+
         this.setBasicStyles();
 
-        /*
-         * Listeners
-         */
+
+        /* Listeners */
 
         this.ivyTouch.on('touchstart', this.handleTouchstart);
         this.ivyTouch.on('touchend', this.handleTouchend);
@@ -72,14 +72,6 @@ export class IvyPinch {
         if (this.properties.doubleTap){
             this.ivyTouch.on('double-tap', this.handleDoubleTap);
         }
-
-        //ivyTouch.on('horizontal-swipe', handleLinearSwipe);
-        //ivyTouch.on('vertical-swipe', handleLinearSwipe);
-
-
-        /* Touchmove */
-
-        //this.element.addEventListener("touchmove", this.handleTouchmove, false);
     }   
 
 
@@ -102,22 +94,6 @@ export class IvyPinch {
             this.getTouchstartPosition(event);
         }
     }
-
-
-    /* Touchmove */
-    /*
-    handleTouchmove = (event: any) => {
-        const touches = event.touches;
-
-        // Linear swipe
-        if (detectLinearSwipe(touches) ||
-            eventType === 'horizontal-swipe' ||
-            eventType === 'vertical-swipe') {
-
-            handleLinearSwipe(event);
-        }
-    }
-    */
 
 
     /* Touchend */
