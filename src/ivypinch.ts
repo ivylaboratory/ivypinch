@@ -2,12 +2,12 @@ var IvyTouch = require('./ivytouch/ivytouch-obf.min');
 
 export interface IvyPinchProperties {
     element: string;
-    key?: string;
-    doubleTap?: boolean;
-    doubleTapScale?: number;
-    transitionDuration?: number;
-    autoZoomOut?: boolean;
-    limitZoom?: number;
+    key ? : string;
+    doubleTap ? : boolean;
+    doubleTapScale ? : number;
+    transitionDuration ? : number;
+    autoZoomOut ? : boolean;
+    limitZoom ? : number;
 }
 
 export const IvyPinchDefaultProperties = {
@@ -17,7 +17,7 @@ export const IvyPinchDefaultProperties = {
     limitZoom: 3
 }
 
-export class IvyPinch { 
+export class IvyPinch {
     properties: IvyPinchProperties;
     ivyTouch: any;
     element: any;
@@ -54,7 +54,7 @@ export class IvyPinch {
         this.ivyTouch = new IvyTouch.IvyTouch({
             element: document.querySelector(properties.element),
             key: properties.key
-        }); 
+        });
 
 
         /* Init */
@@ -69,15 +69,15 @@ export class IvyPinch {
         this.ivyTouch.on('swipe', this.handleSwipe);
         this.ivyTouch.on('pinch', this.handlePinch);
 
-        if (this.properties.doubleTap){
+        if (this.properties.doubleTap) {
             this.ivyTouch.on('double-tap', this.handleDoubleTap);
         }
-    }   
+    }
 
 
     /* Custom events */
 
-    emitEvent(properties: any){
+    emitEvent(properties: any) {
         this.events[properties.name] = new CustomEvent(properties.name, {
             'detail': properties.detail
         });
@@ -160,12 +160,20 @@ export class IvyPinch {
         this.moveX = this.initialMoveX + (this.moveLeft(0, event.touches) - this.startX);
         this.moveY = this.initialMoveY + (this.moveTop(0, event.touches) - this.startY);
 
-        this.emitEvent({name: 'swipe', detail: { moveX: this.moveX, moveY: this.moveY }});
+        this.emitEvent({
+            name: 'swipe',
+            detail: {
+                moveX: this.moveX,
+                moveY: this.moveY
+            }
+        });
         this.transformElement(0);
     }
 
     handleDoubleTap = (event: any) => {
-        this.emitEvent({name: 'double-tap'});
+        this.emitEvent({
+            name: 'double-tap'
+        });
         this.toggleZoom(event);
         return;
     }
@@ -224,16 +232,21 @@ export class IvyPinch {
         this.moveX = this.initialMoveX - (((this.distance / this.initialDistance) * this.moveXC) - this.moveXC);
         this.moveY = this.initialMoveY - (((this.distance / this.initialDistance) * this.moveYC) - this.moveYC);
 
-        this.emitEvent({name: 'pinch', detail: { scale: this.scale }});
+        this.emitEvent({
+            name: 'pinch',
+            detail: {
+                scale: this.scale
+            }
+        });
         this.transformElement(0);
     }
 
     handleLimitZoom(): void {
-        if (this.properties.limitZoom === undefined){
+        if (this.properties.limitZoom === undefined) {
             return;
         }
 
-        if (this.scale > this.properties.limitZoom){
+        if (this.scale > this.properties.limitZoom) {
             const imageWidth = this.getImageWidth();
             const imageHeight = this.getImageHeight();
             const enlargedImageWidth = imageWidth * this.scale;
@@ -398,8 +411,8 @@ export class IvyPinch {
     }
 
     transformElement(duration: any) {
-        this.element.style.transition = "all "+duration+"ms";
-        this.element.style.transform = "matrix("+Number(this.scale)+", 0, 0, "+Number(this.scale)+", "+Number(this.moveX)+", "+Number(this.moveY)+")";
+        this.element.style.transition = "all " + duration + "ms";
+        this.element.style.transform = "matrix(" + Number(this.scale) + ", 0, 0, " + Number(this.scale) + ", " + Number(this.moveX) + ", " + Number(this.moveY) + ")";
     }
 
     isTouchScreen() {
@@ -415,7 +428,7 @@ export class IvyPinch {
         return this.getMatchMedia(query);
     }
 
-    getMatchMedia(query: any){
+    getMatchMedia(query: any) {
         return window.matchMedia(query).matches;
     }
 
@@ -450,7 +463,7 @@ export class IvyPinch {
         if (this.initialScale === 1) {
 
             if (event && event.changedTouches) {
-                if (this.properties.doubleTapScale === undefined){
+                if (this.properties.doubleTapScale === undefined) {
                     return;
                 }
 
@@ -466,10 +479,14 @@ export class IvyPinch {
 
             this.centeringImage();
             this.updateInitialValues();
-            this.emitEvent({name: 'zoom-in'});
+            this.emitEvent({
+                name: 'zoom-in'
+            });
             this.transformElement(this.properties.transitionDuration);
         } else {
-            this.emitEvent({name: 'zoom-out'});
+            this.emitEvent({
+                name: 'zoom-out'
+            });
             this.resetScale();
         }
     }
