@@ -6,6 +6,14 @@
     "name": "Nikita Drozhzhin",
     "email": "drozhzhin.n.e@gmail.com"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ivylaboratory/ivypinch.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ivylaboratory/ivypinch/issues"
+  },
+  "homepage": "http://ivypinch.one",
   "main": "lib/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

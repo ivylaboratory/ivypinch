@@ -19,26 +19,26 @@ export const IvyPinchDefaultProperties = {
 
 export class IvyPinch {
     properties: IvyPinchProperties;
-    ivyTouch: any;
+    ivyTouch: any; // Library for touch type detection 
     element: any;
-    elementTarget: any;
+    elementTarget: any; // Name for scalable tag
     parentElement: any;
     i: number = 0;
     scale: number = 1;
     initialScale: number = 1;
     elementPosition: any;
     eventType: any;
-    startX: number = 0;
-    startY: number = 0;
-    moveX: number = 0;
-    moveY: number = 0;
+    startX: number = 0; // X coordinate start touch
+    startY: number = 0; 
+    moveX: number = 0; // X coordinate of new image position
+    moveY: number = 0; 
     initialMoveX: number = 0;
     initialMoveY: number = 0;
-    moveXC: number = 0;
-    moveYC: number = 0;
+    moveXC: number = 0; // Center of X coordinates of two touches
+    moveYC: number = 0; 
     lastTap: number = 0;
     draggingMode: boolean = false;
-    distance: number = 0;
+    distance: number = 0; // Distance between two touches
     doubleTapTimeout: number = 0;
     initialDistance: number = 0;
     linearHorizontalSwipe: boolean = true;
@@ -57,7 +57,7 @@ export class IvyPinch {
         });
 
 
-        /* Init */
+        /* Style initialization */
 
         this.setBasicStyles();
 
