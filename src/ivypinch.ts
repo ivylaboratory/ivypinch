@@ -66,7 +66,7 @@ export class IvyPinch {
 
         this.ivyTouch.on('touchstart', this.handleTouchstart);
         this.ivyTouch.on('touchend', this.handleTouchend);
-        this.ivyTouch.on('swipe', this.handleSwipe);
+        this.ivyTouch.on('pan', this.handlePan);
         this.ivyTouch.on('pinch', this.handlePinch);
 
         if (this.properties.doubleTap) {
@@ -88,10 +88,10 @@ export class IvyPinch {
     /* Touchstart */
 
     handleTouchstart = (event: any) => {
-        this.getElementPosition();
+        this.elementPosition = this.getElementPosition();
 
         if (this.eventType === undefined) {
-            this.getTouchstartPosition(event);
+            [this.startX, this.startY] = this.getTouchstartPosition(event);
         }
     }
 
@@ -114,7 +114,7 @@ export class IvyPinch {
         }
 
         // Align image
-        if (this.eventType === 'pinch' || this.eventType === 'swipe') {
+        if (this.eventType === 'pinch' || this.eventType === 'pan') {
             this.alignImage();
         }
 
@@ -125,7 +125,7 @@ export class IvyPinch {
 
         // Update initial values
         if (this.eventType === 'pinch' ||
-            this.eventType === 'swipe' ||
+            this.eventType === 'pan' ||
             this.eventType === 'horizontal-swipe' ||
             this.eventType === 'vertical-swipe') {
 
@@ -144,7 +144,7 @@ export class IvyPinch {
      * Handlers
      */
 
-    handleSwipe = (event: any) => {
+    handlePan = (event: any) => {
         if (this.scale <= 1) {
             return;
         }
@@ -156,12 +156,12 @@ export class IvyPinch {
             this.startY = event.touches[0].clientY - this.elementPosition.top;
         }
 
-        this.eventType = 'swipe';
+        this.eventType = 'pan';
         this.moveX = this.initialMoveX + (this.moveLeft(0, event.touches) - this.startX);
         this.moveY = this.initialMoveY + (this.moveTop(0, event.touches) - this.startY);
 
         this.emitEvent({
-            name: 'swipe',
+            name: 'pan',
             detail: {
                 moveX: this.moveX,
                 moveY: this.moveY
@@ -187,6 +187,9 @@ export class IvyPinch {
             event.preventDefault();
         }
 
+        const clientX = event.touches[0].clientX;
+        const clientY = event.touches[0].clientY;
+
         this.i++;
 
         // Note: there are problems with linear swipe, when moving types are mixed
@@ -195,13 +198,13 @@ export class IvyPinch {
         }
 
         if (this.eventType === 'horizontal-swipe') {
-            this.moveX = this.initialMoveX + ((event.touches[0].clientX - this.elementPosition.left) - this.startX);
+            this.moveX = this.initialMoveX + ((clientX - this.elementPosition.left) - this.startX);
             this.moveY = 0;
         }
 
         if (this.eventType === 'vertical-swipe') {
             this.moveX = 0;
-            this.moveY = this.initialMoveY + ((event.touches[0].clientY - this.elementPosition.top) - this.startY);
+            this.moveY = this.initialMoveY + ((clientY - this.elementPosition.top) - this.startY);
         }
 
         if (this.eventType) {
@@ -376,12 +379,16 @@ export class IvyPinch {
     }
 
     getElementPosition() {
-        this.elementPosition = this.element.parentElement.getBoundingClientRect();
+        return this.element.parentElement.getBoundingClientRect();
     }
 
     getTouchstartPosition(event: any) {
-        this.startX = event.touches[0].clientX - this.elementPosition.left;
-        this.startY = event.touches[0].clientY - this.elementPosition.top;
+        const clientX = event.touches[0].clientX;
+        const clientY = event.touches[0].clientY;
+
+        let startX = clientX - this.elementPosition.left;
+        let startY = clientY - this.elementPosition.top;
+        return [startX, startY];
     }
 
     resetScale() {
@@ -399,7 +406,10 @@ export class IvyPinch {
     }
 
     getDistance(touches: any) {
-        return Math.sqrt(Math.pow(touches[0].pageX - touches[1].pageX, 2) + Math.pow(touches[0].pageY - touches[1].pageY, 2));
+        const pageX = [touches[0].pageX, touches[1].pageX];
+        const pageY = [touches[0].pageY, touches[1].pageY];
+
+        return Math.sqrt(Math.pow(pageX[0] - pageX[1], 2) + Math.pow(pageY[0] - pageY[1], 2));
     }
 
     getImageHeight() {
