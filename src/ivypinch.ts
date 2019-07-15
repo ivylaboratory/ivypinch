@@ -17,17 +17,19 @@ export const IvyPinchDefaultProperties = {
     limitZoom: 3
 }
 
+type EventType = undefined | 'pan' | 'pinch' | 'horizontal-swipe' | 'vertical-swipe' | 'touchend';
+
 export class IvyPinch {
     properties: IvyPinchProperties;
     ivyTouch: any; // Library for touch type detection 
-    element: any;
-    elementTarget: any; // Name for scalable tag
-    parentElement: any;
+    element: HTMLElement;
+    elementTarget: string; // Name for scalable tag
+    parentElement: HTMLElement | null;
     i: number = 0;
     scale: number = 1;
     initialScale: number = 1;
-    elementPosition: any;
-    eventType: any;
+    elementPosition: ClientRect;
+    eventType: EventType = undefined;
     startX: number = 0; // X coordinate start touch
     startY: number = 0; 
     moveX: number = 0; // X coordinate of new image position
@@ -47,7 +49,9 @@ export class IvyPinch {
 
     constructor(properties: any) {
         this.element = document.querySelector(properties.element);
-        this.elementTarget = this.element.querySelector('*').tagName;
+        this.elementPosition = this.getElementPosition();
+        this.elementTarget = this.getTagName(this.element);
+
         this.parentElement = this.element.parentElement;
         this.properties = Object.assign({}, IvyPinchDefaultProperties, properties);
 
@@ -454,6 +458,11 @@ export class IvyPinch {
             return imgHeight > this.parentElement.offsetHeight ||
                 imgWidth > this.parentElement.offsetWidth;
         }
+    }
+
+    getTagName(element: HTMLElement) {
+        const elementTag = <HTMLElement>element.querySelector('*');
+        return elementTag.tagName; 
     }
 
 
