@@ -4,10 +4,10 @@ export interface IvyPinchProperties {
     element: string;
     key ? : string;
     doubleTap ? : boolean;
-    doubleTapScale ? : number;
-    transitionDuration ? : number;
+    doubleTapScale: number;
+    transitionDuration: number;
     autoZoomOut ? : boolean;
-    limitZoom ? : number;
+    limitZoom: number;
 }
 
 export const IvyPinchDefaultProperties = {
@@ -24,7 +24,7 @@ export class IvyPinch {
     ivyTouch: any; // Library for touch type detection 
     element: HTMLElement;
     elementTarget: string; // Name for scalable tag
-    parentElement: HTMLElement | null;
+    parentElement: HTMLElement;
     i: number = 0;
     scale: number = 1;
     initialScale: number = 1;
@@ -79,7 +79,7 @@ export class IvyPinch {
         this.elementPosition = this.getElementPosition();
         this.elementTarget = this.getTagName(this.element);
 
-        this.parentElement = this.element.parentElement;
+        this.parentElement = this.getParentElement();
         this.properties = this.getDefaultProperties(properties);
 
         this.ivyTouch = new IvyTouch.IvyTouch({
@@ -401,7 +401,7 @@ export class IvyPinch {
     }
 
     setImageWidth(): void {
-        const imgElement = this.element.getElementsByTagName(this.elementTarget);
+        const imgElement = this.element.getElementsByTagName(this.elementTarget) as HTMLCollectionOf<HTMLElement>;;
 
         if (imgElement.length) {
             imgElement[0].style.maxWidth = '100%';
@@ -410,7 +410,12 @@ export class IvyPinch {
     }
 
     getElementPosition() {
-        return this.element.parentElement.getBoundingClientRect();
+        const parentElement = this.element.parentElement;
+        if (parentElement) {
+            return parentElement.getBoundingClientRect();
+        } else {
+            return this.element.getBoundingClientRect();
+        }
     }
 
     getTouchstartPosition(event: any) {
@@ -467,6 +472,14 @@ export class IvyPinch {
 
     getDefaultProperties(properties: IvyPinchProperties) {
         return Object.assign({}, IvyPinchDefaultProperties, properties);
+    }
+
+    getParentElement(): HTMLElement {
+        if (this.element.parentElement) {
+            return this.element.parentElement;
+        } else {
+            return this.element;
+        }
     }
 
 
